@@ -5,13 +5,13 @@ volumes:
   local_postgres_data_backups: {}
 
 services:
-  django: &django
+  spotus_django: &django
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
     image: spotus_local_django
     depends_on:
-      - postgres
+      - spotus_postgres
     volumes:
       - .:/app
     env_file:
@@ -26,7 +26,7 @@ services:
         aliases:
           - dev.spot.us
 
-  postgres:
+  spotus_postgres:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
@@ -37,33 +37,26 @@ services:
     env_file:
       - ./.envs/.local/.postgres
 
-  redis:
+  spotus_redis:
     image: redis:5.0
 
-  celeryworker:
+  spotus_celeryworker:
     <<: *django
     image: spotus_local_celeryworker
     depends_on:
-      - redis
-      - postgres
+      - spotus_redis
+      - spotus_postgres
     ports: []
     command: /start-celeryworker
 
-  celerybeat:
+  spotus_celerybeat:
     <<: *django
     image: spotus_local_celerybeat
     depends_on:
-      - redis
-      - postgres
+      - spotus_redis
+      - spotus_postgres
     ports: []
     command: /start-celerybeat
-
-  flower:
-    <<: *django
-    image: spotus_local_flower
-    ports:
-      - "5555:5555"
-    command: /start-flower
 
 networks:
   squarelet_default:

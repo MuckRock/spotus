@@ -1,6 +1,7 @@
+# Django
 from django.contrib.auth import forms, get_user_model
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 

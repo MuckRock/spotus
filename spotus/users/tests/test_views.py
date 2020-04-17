@@ -1,6 +1,10 @@
-import pytest
+# Django
 from django.test import RequestFactory
 
+# Third Party
+import pytest
+
+# SpotUs
 from spotus.users.models import User
 from spotus.users.views import UserRedirectView, UserUpdateView
 

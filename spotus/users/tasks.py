@@ -1,5 +1,7 @@
+# Django
 from django.contrib.auth import get_user_model
 
+# SpotUs
 from config import celery_app
 
 User = get_user_model()

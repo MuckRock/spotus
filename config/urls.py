@@ -1,3 +1,4 @@
+# Django
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -17,6 +18,7 @@ urlpatterns = [
     path("users/", include("spotus.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+    path("assignments/", include("spotus.assignments.urls", namespace="assignments")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # API URLS
 urlpatterns += [

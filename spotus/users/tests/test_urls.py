@@ -1,6 +1,10 @@
-import pytest
+# Django
 from django.urls import resolve, reverse
 
+# Third Party
+import pytest
+
+# SpotUs
 from spotus.users.models import User
 
 pytestmark = pytest.mark.django_db

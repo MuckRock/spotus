@@ -1,6 +1,10 @@
+# Django
+from django.contrib.auth import get_user_model
+
+# Standard Library
 from typing import Any, Sequence
 
-from django.contrib.auth import get_user_model
+# Third Party
 from factory import DjangoModelFactory, Faker, post_generation
 
 

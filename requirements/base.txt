@@ -7,6 +7,11 @@ redis==3.4.1 # https://github.com/andymccurdy/redis-py
 celery==4.4.2  # pyup: < 5.0  # https://github.com/celery/celery
 django-celery-beat==2.0.0  # https://github.com/celery/django-celery-beat
 flower==0.9.4  # https://github.com/mher/flower
+html2text
+smart_open
+bleach
+pyembed
+rules
 
 # Django
 # ------------------------------------------------------------------------------
@@ -17,5 +22,9 @@ django-allauth==0.41.0  # https://github.com/pennersr/django-allauth
 django-crispy-forms==1.9.0  # https://github.com/django-crispy-forms/django-crispy-forms
 django-compressor==2.4  # https://github.com/django-compressor/django-compressor
 django-redis==4.11.0  # https://github.com/niwinz/django-redis
+django-ipware
 # Django REST Framework
 djangorestframework==3.11.0  # https://github.com/encode/django-rest-framework
+django-taggit
+django-choices
+django-filter

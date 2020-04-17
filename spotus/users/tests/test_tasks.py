@@ -1,6 +1,10 @@
-import pytest
+# Django
 from celery.result import EagerResult
 
+# Third Party
+import pytest
+
+# SpotUs
 from spotus.users.tasks import get_users_count
 from spotus.users.tests.factories import UserFactory
 

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% comment %}
+  This is the base style for a list of objects: a collection of FOIA requests, agencies, jurisdictions, users, etc.
+{% endcomment %}
+
+{% load static %}
+
+{% block title %}{{title}} &bull; MuckRock{% endblock title %}
+
+{% block content %}
+  <div class="list grid__row">
+    <nav class="grid__column quarter">
+      {% block list-navigation %}
+        <header>
+          {% block list-header %}
+            <h1>{% block list-title %}{{title}}{% endblock list-title %}</h1>
+          {% endblock list-header %}
+        </header>
+        {% block list-sections %}
+        {% endblock list-sections %}
+
+        {% if filter.form.fields %}
+          <div class="nomargins">
+            <a href="#filter-toggle" class="bold list__toggle" id="filter-toggle">{% include 'lib/component/icon/search.svg' %}Show Filters &amp; Search</a>
+            <a href="#" class="bold list__toggle list__toggle--hide">&times; Hide Filters</a>
+            <form method="GET" class="filter form" id="filter-form">
+              {% csrf_token %}
+              {% if saved_searches %}
+                <label>Saved searches:</label>
+                <ul>
+                  {% for saved_search in saved_searches %}
+                    <li><a href="?load={{ saved_search.title }}">{{ saved_search.title }}</a><button class="saved-search-delete" formmethod="post" name="delete" value="{{ saved_search.pk }}">Remove</button></li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+              {% if search_form %}
+                {% include 'lib/pattern/field.html' with field=search_form.q %}
+              {% endif %}
+              {% include 'lib/pattern/form.html' with form=filter.form %}
+              <div class="button-group">
+                <button class="button get" action="apply-filters">Filter</button>
+                <a class="button" href="{{ request.path }}">Clear</a>
+              </div>
+              {% if save_search_form and request.user.is_authenticated %}
+                {% include 'lib/pattern/form.html' with form=save_search_form %}
+                <div class="button-group">
+                  <button class="button" name="action" value="save" formmethod="post">Save</button>
+                </div>
+              {% endif %}
+            </form>
+          </div>
+        {% endif %}
+      {% endblock list-navigation %}
+    </nav>
+    <div class="grid__column three-quarters">
+      {% block list-content %}
+        {% block list-actions %}{% endblock %}
+        {% if object_list %}
+          {% include 'lib/component/pagination.html' %}
+          {% block list-objects %}
+            <table class="sortable cardtable" data-sort-by="{{sort}}" data-order-by="{{order}}">
+              {% block list-table %}
+                <thead>
+                  <tr>
+                    {% block list-table-head %}
+                      <th data-sort="id">ID</th>
+                      <th>Object</th>
+                    {% endblock list-table-head %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% block list-table-body %}
+                    {% for object in object_list %}
+                      <tr>
+                        {% block list-table-row %}
+                          <td>{{object.id}}
+                            <td><a href="{{object.get_absolute_url}}">{{object}}</a></td>
+                          {% endblock list-table-row %}
+                      </tr>
+                    {% endfor %}
+                  {% endblock list-table-body %}
+                </tbody>
+              {% endblock list-table %}
+            </table>
+          {% endblock %}
+          {% include 'lib/component/pagination.html' %}
+        {% else %}
+          {% block empty %}
+            {% if request.GET %}
+              <p class="empty">No results given this filter.</p>
+            {% else %}
+              <p class="empty">No Results</p>
+            {% endif %}
+          {% endblock %}
+        {% endif %}
+      {% endblock list-content %}
+    </div>
+  </div>
+{% endblock %}

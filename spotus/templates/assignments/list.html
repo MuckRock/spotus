@@ -1,0 +1,43 @@
+{% extends "base_list.html" %}
+{% load humanize %}
+{% load rules %}
+
+{% block list-title %}
+  Open Assignments
+{% endblock list-title %}
+
+{% block list-table-head %}
+<th data-sort="title">Title</th>
+<th data-sort="user">Owner</th>
+<th>Tasks Completed</th>
+{% endblock list-table-head %}
+
+{% block list-table-row %}
+  {% with object as assignment %}
+    <td>
+      <a href="{{ assignment.get_absolute_url }}">
+        {{ assignment.title }}
+      </a>
+      &nbsp;
+      {% if assignment.status == "close" %}
+        <span class="small badge state red">Closed</span>
+      {% elif assignment.status == "draft" %}
+        <span class="small badge state">Draft</span>
+      {% endif %}
+    </td>
+    <td><a href="{{ assignment.user.get_absolute_url }}">{{ assignment.user.name }}</a></td>
+    <td>
+      {{ assignment.responses.all|length|intcomma }}
+      {% if assignment.data.all %}
+        out of {{ assignment.total_assignments|intcomma }}
+      {% endif %}
+    </td>
+  {% endwith %}
+{% endblock list-table-row %}
+
+{% block list-actions %}
+  {% has_perm "assignments.add_assignment" request.user as can_add %}
+  {% if can_add %}
+    <a class="primary button" href="{% url "assignments:create" %}">Create a New Assignment</a>
+  {% endif %}
+{% endblock %}

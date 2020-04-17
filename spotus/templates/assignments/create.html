@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if assignment %}
+    MuckRock &bull; Edit Assignment
+  {% else %}
+    MuckRock &bull; New Assignment
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="create assignment form">
+    <header>
+      {% if assignment %}
+        <h1>Edit assignment</h1>
+      {% else %}
+        <h1>Create a new assignment</h1>
+      {% endif %}
+    </header>
+    <form method="post" enctype="multipart/form-data" class="create-assignment">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="failure errorlist">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+      <div class="hidden-fields">
+        {% for field in form.hidden_fields %}
+          {{ field }}
+        {% endfor %}
+      </div>
+      <div class="visible-fields">
+        {% with form.title as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        {% with form.description as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        {% with form.data_limit as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        {% with form.multiple_per_page as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        {% with form.user_limit as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        {% with form.registration as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        {% with form.ask_public as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        {% with form.submission_emails as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        <div class="{% if form.form_json.errors %}error {% endif %}field">
+          <label>Form</label>
+          {% if form.form_json.errors %} {{form.form_json.errors}} {% endif %}
+          <div id="build-wrap"></div>
+        </div>
+        <p>Adding data allows your form to be filled out once per data item.  A data item can be things like a document, tweet or video.  URLs which support oEmbed work best (such as Document Cloud, Twitter, or YouTube), but any valid URL should work.  You may add URLs individually using the form below, or add them all at once by uploading them in a CSV file.  The CSV file expects a column named URL which contains the URL for the item.  Any other columns will be saved as metadata with the data and shown with the results.</p>
+        {% with form.doccloud_each_page as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+        {% with form.data_csv as field %} {% include 'lib/pattern/field.html' %} {% endwith %}
+      </div>
+
+      {{ data_formset.management_form }}
+      {% for form in data_formset %}
+        <div class="assignment-data">
+          {% include 'lib/pattern/form.html' %}
+        </div>
+      {% endfor %}
+
+      <p><a href="#" id="add-assignment-data">Add another...</a></p>
+      {% if assignment.status == "open" %}
+        <button type="submit" name="submit" value="start" class="blue button">Update</button>
+      {% else %}
+        <button type="submit" name="submit" value="save" class="button">Save</button>
+        <button type="submit" name="submit" value="start" class="blue button">Start</button>
+      {% endif %}
+    </form>
+  </div>
+{% endblock %}
+

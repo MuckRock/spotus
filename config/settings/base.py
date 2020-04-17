@@ -1,8 +1,10 @@
 """
 Base settings to build other settings files upon.
 """
+# Standard Library
 from pathlib import Path
 
+# Third Party
 import environ
 
 ROOT_DIR = Path(__file__).parents[2]
@@ -59,23 +61,25 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "django.contrib.humanize", # Handy template tags
+    "django.contrib.humanize",
     "django.contrib.admin",
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
-    "crispy_forms",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "crispy_forms",
     "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
+    "rules.apps.AutodiscoverRulesConfig",
+    "taggit",
 ]
 
 LOCAL_APPS = [
     "spotus.users.apps.UsersConfig",
-    # Your stuff: custom apps go here
+    "spotus.assignments.apps.AssignmentsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -89,6 +93,7 @@ MIGRATION_MODULES = {"sites": "spotus.contrib.sites.migrations"}
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
+    "rules.permissions.ObjectPermissionBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
@@ -250,6 +255,10 @@ LOGGING = {
     },
     "root": {"level": "INFO", "handlers": ["console"]},
 }
+if DEBUG:
+    LOGGING["loggers"] = {
+        "rules": {"handlers": ["console"], "level": "DEBUG", "propagate": False}
+    }
 
 # Celery
 # ------------------------------------------------------------------------------
@@ -282,7 +291,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "username"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ADAPTER = "spotus.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
@@ -304,3 +313,4 @@ REST_FRAMEWORK = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+TAGGIT_CASE_INSENSITIVE = True

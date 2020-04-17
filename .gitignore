@@ -15,7 +15,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -258,6 +257,9 @@ GitHub.sublime-settings
 
 # Session
 Session.vim
+
+# Local VimRC
+.lvimrc
 
 # Temporary
 .netrwhist

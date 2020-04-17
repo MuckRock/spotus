@@ -1,11 +1,13 @@
+# Standard Library
 import logging
 
+# Third Party
 import sentry_sdk
+from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
-from sentry_sdk.integrations.celery import CeleryIntegration
 
-
+# Local
 from .base import *  # noqa
 from .base import env
 
@@ -116,9 +118,7 @@ DEFAULT_FROM_EMAIL = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
-EMAIL_SUBJECT_PREFIX = env(
-    "DJANGO_EMAIL_SUBJECT_PREFIX", default="[SpotUs]"
-)
+EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default="[SpotUs]")
 
 # ADMIN
 # ------------------------------------------------------------------------------

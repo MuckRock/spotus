@@ -1,5 +1,7 @@
+# Django
 from rest_framework import serializers
 
+# SpotUs
 from spotus.users.models import User
 
 

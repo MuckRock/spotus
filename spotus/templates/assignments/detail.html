@@ -1,0 +1,204 @@
+{% extends "base_detail.html" %}
+
+{% block title %}{{ assignment.title }}{% endblock %}
+
+{% block type %}assignment{% endblock type %}
+
+{% block header %}
+  <h1>{{ assignment.title }}</h1>
+  <p>
+    An assignment by
+    <a href="{{ assignment.user.get_absolute_url }}">{{ assignment.user.name }}</a>.
+  </p>
+  {% social title=assignment.title url=assignment.get_absolute_url %}
+  <p>{{ assignment.description|markdown }}</p>
+  <p>{{ assignment.contributor_line }}</p>
+{% endblock header %}
+
+{% block actions %}
+  <div class="actions">
+    <a href="{% url "assignment-assignment" slug=assignment.slug idx=assignment.pk %}" class="button primary">Submit to this assignment</a>
+    {% if edit_access %}
+      <a href="?csv=1" class="button primary">Results CSV</a>
+      <a href="{% url "assignment-draft" idx=assignment.pk slug=assignment.slug %}" class="button primary">Edit</a>
+      {% if assignment.status == "open" %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="submit" name="action" value="Close" class="button primary form-button">
+        </form>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock actions %}
+
+{% block main %}
+  <div class="tab-container">
+    <ul role="tablist" class="tab-list">
+      {% if edit_access %}
+        <li>
+          <a role="tab" class="tab" aria-controls="info" href="#info">
+            <span class="label">Info</span>
+          </a>
+        </li>
+        <li>
+          <a role="tab" class="tab" aria-controls="info" href="#data">
+            <span class="label">Add Data</span>
+          </a>
+        </li>
+      {% endif %}
+      <li>
+        <a role="tab" class="tab" aria-controls="responses" href="#assignment-responses">
+          {% with assignment.responses.count as count %}
+            <span class="counter">{{ count }}</span>
+            <span class="label">Response{{ count|pluralize }}</span>
+          {% endwith %}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  {% if edit_access %}
+    <section role="tabpanel" class="tab-panel communications" id="info">
+      <h2 class="tab-panel-heading">Information</h2>
+      <dl>
+        <dt>User</dt>
+        <dd>{{ assignment.user }}</dd>
+        <dt>Created</dt>
+        <dd>{{ assignment.datetime_created|date }}</dd>
+        <dt>Status</dt>
+        <dd>{{ assignment.get_status_display }}</dd>
+        <dt>Description</dt>
+        <dd>{{ assignment.description|markdown }}</dd>
+        {% if assignment.data.all %}
+          <dt>Data Count</dt>
+          <dd>{{ assignment.data.all|length }}</dd>
+          <dt>Data Limit</dt>
+          <dd>{{assignment.data_limit}}</dd>
+          <dt>Multiple Per Page</dt>
+          <dd>{{assignment.multiple_per_page}}</dd>
+        {% else %}
+          <dt>User Limit</dt>
+          <dd>{{assignment.user_limit}}</dd>
+        {% endif %}
+        {% if assignment.submission_emails.all %}
+          <dt>Submission Email</dt>
+          {% for email in assignment.submission_emails.all %}
+            <dd>{{ email }}</dd>
+          {% endfor %}
+        {% endif %}
+        <dt>
+        <dt>Embed Code</dt>
+        <dd>
+        <textarea rows="1" readonly><iframe src="https://{{ domain }}{% url "assignment-embed" slug=assignment.slug idx=assignment.pk %}" width="100%" height="600px"></iframe></textarea>
+        </dd>
+        <dt>Gallery Code</dt>
+        <dd>
+        <textarea rows="1" readonly><iframe src="https://{{ domain }}{% url "assignment-gallery" slug=assignment.slug idx=assignment.pk %}" width="100%" height="600px"></iframe></textarea>
+        </dd>
+        <dt>Responses per Day</dt>
+        <dd>
+          <div class="assignment-daily-response-table">
+            <table>
+              {% for day in assignment.responses_per_day %}
+                <tr>
+                  <td>{{ day.date|date }}</td>
+                  <td>{{ day.count }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        <dd>
+      </dl>
+    </section>
+
+    <section role="tabpanel" class="tab-panel communications" id="data">
+      <h2 class="tab-panel-heading">Add Data</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% with data_form as form %}
+          {% include "lib/pattern/form.html" %}
+        {% endwith %}
+        <input type="submit" name="action" value="Add Data" class="button primary" id="add-data-button">
+      </form>
+    </section>
+  {% endif %}
+
+  <section role="tabpanel" class="tab-panel" id="assignment-responses">
+    <h2 class="tab-panel-heading">Responses</h2>
+    <section>
+      <form>
+        <label>Search: <input type="textbox" id="assignment-search" value="{{ request.GET.search }}"></label>
+        <label>
+          Filter:
+          <select id="filter">
+            <option value="" {% if request.GET.flag == "null" %}selected{% endif %}>All</option>
+            <option value="flag" {% if request.GET.flag == "true" %}selected{% endif %}>Flagged</option>
+            <option value="no-flag" {% if request.GET.flag == "false" %}selected{% endif %}>Unflagged</option>
+          </select>
+        </label>
+        {% if assignment.data.all %}
+          <label>
+            Show data inline: <input type="checkbox" id="data-inline">
+          </label>
+        {% endif %}
+        {% if edit_access %}
+          <label>Flag All: <input type="checkbox" class="flag-all"></label>
+          <label>Gallery All: <input type="checkbox" class="gallery-all"></label>
+        {% endif %}
+      </form>
+      <nav class="pagination small">
+        <div class="pagination__control">
+          <p class="pagination__control__item">Showing <span class="first"></span> to <span class="last"></span> of <span class="total"></span></p>
+          <p class="pagination__control__item">
+            Page
+            <select id="page">
+            </select>
+            of <span class="total-pages"></span>
+          </p>
+          <p class="pagination__control__item">
+            <select id="per-page">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+            items per page
+          </p>
+        </div>
+        <div class="pagination__links">
+          <span class="previous no-more">
+            <a class="pagination__link first-page" href="#">First Page</a>
+            <a class="pagination__link previous-page" href="#">Previous Page</a>
+            <span class="pagination__link">First Page</span>
+            <span class="pagination__link">Previous Page</span>
+          </span>
+          <span class="next no-more">
+            <a class="pagination__link next-page" href="#">Next Page</a>
+            <a class="pagination__link last-page" href="#">Last Page</a>
+            <span class="pagination__link">Next Page</span>
+            <span class="pagination__link">Last Page</span>
+          </span>
+        </div>
+      </nav>
+    </section>
+    <section class="assignment-responses" data-assignment="{{ assignment.pk }}">
+    </section>
+  </section>
+  <p id="pencil-svg">
+    {% include "lib/component/icon/pencil.svg" %}
+  </p>
+  <p id="email-svg">
+    {% include "lib/component/icon/email.svg" %}
+  </p>
+  <div class="modal" id="message-modal">
+    <h1>Contact User</h1>
+    <h2>Send an email to <span class="name"></span></h2>
+    <form method="post" action="/assignment/message/">
+      {% with message_form as form %}
+        {% include "lib/pattern/form.html" %}
+      {% endwith %}
+      <button type="submit" name="action" value="message" class="primary button close-modal">Message</button>
+      <span class="close-modal button">Close</span>
+    </form>
+  </div>
+
+{% endblock main %}
