@@ -3,7 +3,7 @@
 
 {% block classes %}project{% endblock %}
 
-{% block title %}Assignments &bull; MuckRock{% endblock %}
+{% block title %}Assignments{% endblock %}
 
 {% block explore_header_description %}
   <h1>Assignments</h1>
@@ -56,7 +56,7 @@
 {% block explore_main %}
   <div class="explore__section">
     {% for assignment in assignments %}
-      {% include 'lib/pattern/assignment.html' %}
+      {% include "lib/pattern/assignment.html" %}
     {% endfor %}
   </div>
 {% endblock %}

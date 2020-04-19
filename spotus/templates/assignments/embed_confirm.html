@@ -1,7 +1,11 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block body %}
   <h1>Thanks for your submission!</h1>
-  <p><a target="_top" href="{% url "assignments:list" %}">See other assignments you can help out with.</a></p>
+  <p>
+    <a target="_top" href="{% url "assignments:list" %}">
+      See other assignments you can help out with.
+    </a>
+  </p>
 {% endblock %}
 

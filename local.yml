@@ -48,6 +48,9 @@ services:
       - spotus_postgres
     ports: []
     command: /start-celeryworker
+    networks:
+      default:
+        aliases: []
 
   spotus_celerybeat:
     <<: *django
@@ -57,6 +60,9 @@ services:
       - spotus_postgres
     ports: []
     command: /start-celerybeat
+    networks:
+      default:
+        aliases: []
 
 networks:
   squarelet_default:

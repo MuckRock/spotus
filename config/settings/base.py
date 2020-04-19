@@ -71,6 +71,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "crispy_forms",
     "django_celery_beat",
+    "markdownify",
     "rest_framework",
     "rest_framework.authtoken",
     "rules.apps.AutodiscoverRulesConfig",
@@ -78,6 +79,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "spotus.core.apps.CoreConfig",
     "spotus.users.apps.UsersConfig",
     "spotus.assignments.apps.AssignmentsConfig",
 ]
@@ -187,6 +189,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "spotus.utils.context_processors.settings_context",
+                "spotus.assignments.context_processors.choices",
             ],
         },
     }
@@ -314,3 +317,4 @@ REST_FRAMEWORK = {
 # Your stuff...
 # ------------------------------------------------------------------------------
 TAGGIT_CASE_INSENSITIVE = True
+SPOTUS_URL = env("SPOTUS_URL", default="http://dev.spot.us")

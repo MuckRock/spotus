@@ -6,7 +6,7 @@
 
 {% load static %}
 
-{% block title %}{{title}} &bull; MuckRock{% endblock title %}
+{% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
   <div class="list grid__row">
@@ -14,7 +14,7 @@
       {% block list-navigation %}
         <header>
           {% block list-header %}
-            <h1>{% block list-title %}{{title}}{% endblock list-title %}</h1>
+            <h1>{% block list-title %}{{ title }}{% endblock list-title %}</h1>
           {% endblock list-header %}
         </header>
         {% block list-sections %}

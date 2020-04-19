@@ -111,7 +111,7 @@ class Assignment(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("assignment:detail", kwargs={"slug": self.slug, "pk": self.pk})
+        return reverse("assignments:detail", kwargs={"slug": self.slug, "pk": self.pk})
 
     def get_data_to_show(self, user, ip_address):
         """Get the assignment data to show"""
@@ -294,7 +294,7 @@ class Data(models.Model):
         on_delete=models.CASCADE,
         related_name="data",
     )
-    url = models.URLField(_("url"), max_length=255)
+    url = models.URLField(_("URL"), max_length=255)
     metadata = JSONField(_("metadata"), default=dict, blank=True)
 
     objects = DataQuerySet.as_manager()
@@ -540,7 +540,7 @@ class Response(models.Model):
         # values created for them
         for key in ["data_id", "full_name", "email", "newsletter", "public"]:
             data.pop(key, None)
-        for pk, value in data.iteritems():
+        for pk, value in data.items():
             value = value if value is not None else ""
             if not isinstance(value, list):
                 value = [value]

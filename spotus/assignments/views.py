@@ -291,8 +291,9 @@ class AssignmentFormView(BaseDetailView, FormView):
             )
             response.create_values(form.cleaned_data)
             messages.success(self.request, "Thank you!")
-            for email in assignment.submission_emails.all():
-                response.send_email(email.email)
+            if assignment.submission_emails:
+                for email in assignment.submission_emails.split(","):
+                    response.send_email(email)
 
         if self.request.POST.get("submit") == "Submit and Add Another":
             return self.render_to_response(self.get_context_data(data=self.data))
@@ -399,7 +400,7 @@ class AssignmentEditResponseView(BaseDetailView, FormView):
         # remove non-assignment field fields
         form.cleaned_data.pop("data_id", None)
         form.cleaned_data.pop("public", None)
-        for field_id, new_value in form.cleaned_data.iteritems():
+        for field_id, new_value in form.cleaned_data.items():
             field = Field.objects.filter(pk=field_id).first()
             if field and field.field.multiple_values:
                 # for multi valued fields, collect all old and new values together
@@ -482,6 +483,7 @@ class AssignmentListView(FilterListView):
         return context_data
 
 
+@method_decorator(login_required, name="dispatch")
 class AssignmentCreateView(PermissionRequiredMixin, CreateView):
     """Create a assignment"""
 
@@ -545,22 +547,12 @@ class AssignmentUpdateView(UpdateView):
         if not user_allowed:
             messages.error(request, "You may not edit this assignment")
             return redirect(assignment)
-        if assignment.status != Status.draft:
-            export_csv.delay(assignment.pk, self.request.user.pk)
-            messages.info(
-                self.request, "A CSV of the results so far will be emailed to you"
-            )
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
         """Set the form JSON in the initial form data"""
         assignment = self.get_object()
-        return {
-            "form_json": assignment.get_form_json(),
-            "submission_emails": ", ".join(
-                str(e) for e in assignment.submission_emails.all()
-            ),
-        }
+        return {"form_json": assignment.get_form_json()}
 
     def get_context_data(self, **kwargs):
         """Add the data formset to the context"""
@@ -596,12 +588,6 @@ class AssignmentUpdateView(UpdateView):
         messages.success(self.request, msg)
         return redirect(assignment)
 
-    def get_form_kwargs(self):
-        """Add user to form kwargs"""
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
-
 
 def oembed(request):
     """AJAX view to get oembed data"""
@@ -628,7 +614,6 @@ def message_response(request):
             from_email="info@muckrock.com",
             reply_to=[request.user.email],
             user=response.user,
-            text_template="assignments/email/message_user.txt",
             html_template="assignments/email/message_user.html",
             extra_context={
                 "body": form.cleaned_data["body"],

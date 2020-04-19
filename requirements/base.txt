@@ -28,3 +28,4 @@ djangorestframework==3.11.0  # https://github.com/encode/django-rest-framework
 django-taggit
 django-choices
 django-filter
+django-markdownify

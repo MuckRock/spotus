@@ -1,9 +1,12 @@
-{% extends 'message/base.html' %}
+{% extends "message/base.html" %}
 
 {% block body %}
-<p>Hi {{ user.name }},</p>
+  <p>Hi {{ user.name }},</p>
 
-<p>{{ from_user.name }} has sent you a message in response to your submission to the assignment {{ assignment.title }}:</p>
+  <p>
+    {{ from_user.name }} has sent you a message in response to your submission
+    to the assignment {{ assignment.title }}:
+  </p>
 
-{{ body|urlize|linebreaks }}
+  {{ body|urlize|linebreaks }}
 {% endblock %}

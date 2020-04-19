@@ -1,0 +1,14 @@
+<header class="global-header">
+  <nav class="global-navigation space-between mb0" id="nav">
+    <div class="nav-section align-center mb0" id="site-nav">
+      <span class="nav-item section-toggle" id="toggle-sections" data-for="#nav-list-sections">
+        {% include "lib/component/icon/sections-lines.svg" %}
+      </span>
+      <ul class="unauthenticated section-list" id="nav-list-sections">
+        <li><a class="nav-item" href="{% url "assignments:index" %}">Assignments</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+

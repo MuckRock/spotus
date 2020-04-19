@@ -7,9 +7,9 @@
 {% endblock list-title %}
 
 {% block list-table-head %}
-<th data-sort="title">Title</th>
-<th data-sort="user">Owner</th>
-<th>Tasks Completed</th>
+  <th data-sort="title">Title</th>
+  <th data-sort="user">Owner</th>
+  <th>Tasks Completed</th>
 {% endblock list-table-head %}
 
 {% block list-table-row %}
@@ -19,9 +19,9 @@
         {{ assignment.title }}
       </a>
       &nbsp;
-      {% if assignment.status == "close" %}
+      {% if assignment.status == Status.closed %}
         <span class="small badge state red">Closed</span>
-      {% elif assignment.status == "draft" %}
+      {% elif assignment.status == Status.draft %}
         <span class="small badge state">Draft</span>
       {% endif %}
     </td>

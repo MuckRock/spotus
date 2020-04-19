@@ -2,7 +2,6 @@
 
 # Django
 from django import forms
-from django.contrib.auth import get_user_model
 from django.core.validators import URLValidator, validate_email
 from django.utils.translation import gettext_lazy as _
 
@@ -15,8 +14,7 @@ from spotus.assignments.constants import DOCUMENT_URL_RE, PROJECT_URL_RE
 from spotus.assignments.fields import FIELD_DICT
 from spotus.assignments.models import Assignment, Data, Response
 from spotus.assignments.tasks import datum_per_page, import_doccloud_proj
-
-User = get_user_model()
+from spotus.users.models import User
 
 
 class AssignmentForm(forms.Form):
@@ -224,7 +222,7 @@ class AssignmentCreationForm(forms.ModelForm, DataCsvForm):
 
     def clean_submission_emails(self):
         """Validate the submission emails field"""
-        emails = self.cleaned_data["receipt_emails"].split(",")
+        emails = self.cleaned_data["submission_emails"].split(",")
         emails = [e.strip() for e in emails if e.strip()]
         bad_emails = []
         for email in emails:
@@ -234,7 +232,7 @@ class AssignmentCreationForm(forms.ModelForm, DataCsvForm):
                 bad_emails.append(email)
         if bad_emails:
             raise forms.ValidationError("Invalid email: %s" % ", ".join(bad_emails))
-        return emails
+        return ",".join(emails)
 
 
 DataFormsetBase = forms.inlineformset_factory(

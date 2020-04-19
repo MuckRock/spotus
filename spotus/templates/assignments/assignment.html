@@ -1,9 +1,10 @@
 {% load humanize %}
+{% load markdownify %}
 
 <div class="assignment form">
   <header class="assignment-form__header">
     <h1>{{ assignment.title }}</h1>
-    <p>{{ assignment.description|markdown }}</p>
+    <p>{{ assignment.description|markdownify }}</p>
     {% if assignment.multiple_per_page %}
       <p>This is your {{ number|ordinal }} time responding for this data.</p>
     {% endif %}
@@ -11,11 +12,11 @@
   <div class="assignment-form__inputs">
     <form {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} method="post" id="submitInput">
       {% csrf_token %}
-      {% include 'lib/pattern/form.html' %}
-      {% if user.is_anonymous and assignment.registration == "required" %}
-        <p>Thanks for helping out with this Assignment!  We need to create an account for you to save your data.  Already have an account?  <a href="{% url "acct-login" %}">Log in</a> instead.</p>
-      {% elif user.is_anonymous and assignment.registration == "optional" %}
-        <p>Thanks for helping out with this Assignment!  You may optionally create an account when you save your data.  Already have an account?  <a href="{% url "acct-login" %}">Log in</a> instead.  Prefer to stay anonymous?  Leave the username and email fields blank.</p>
+      {% include "lib/pattern/form.html" %}
+      {% if user.is_anonymous and assignment.registration == Registration.required %}
+        <p>Thanks for helping out with this Assignment!  We need to create an account for you to save your data.  Already have an account?  <a href="{% url "account_login" %}">Log in</a> instead.</p>
+      {% elif user.is_anonymous and assignment.registration == Registration.optional %}
+        <p>Thanks for helping out with this Assignment!  You may optionally create an account when you save your data.  Already have an account?  <a href="{% url "account_login" %}">Log in</a> instead.  Prefer to stay anonymous?  Leave the username and email fields blank.</p>
       {% endif %}
     </form>
     {% if data %}
@@ -25,12 +26,12 @@
       </form>
     {% endif %}
     <div class="buttons">
-      <input form="submitInput" type="submit" name="submit" value="{% if edit %}Update{% else %}Submit{% endif %}" class="blue button" {% if assignment.status != "open" %}disabled{% endif %}>
+      <input form="submitInput" type="submit" name="submit" value="{% if edit %}Update{% else %}Submit{% endif %}" class="blue button" {% if assignment.status != Status.open %}disabled{% endif %}>
       {% if assignment.multiple_per_page %}
-        <input form="submitInput" type="submit" name="submit" value="Submit and Add Another" class="blue button" {% if assignment.status != "open" %}disabled{% endif %}>
+        <input form="submitInput" type="submit" name="submit" value="Submit and Add Another" class="blue button" {% if assignment.status != Status.open %}disabled{% endif %}>
       {% endif %}
       {% if data and not edit %}
-        <input form="skipInput" type="submit" name="submit" value="Skip" class="button" {% if assignment.status != "open" %}disabled{% endif %}>
+        <input form="skipInput" type="submit" name="submit" value="Skip" class="button" {% if assignment.status != Status.open %}disabled{% endif %}>
       {% endif %}
     </div>
   </div>

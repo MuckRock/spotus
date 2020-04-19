@@ -1,9 +1,0 @@
-{% extends 'message/base.txt' %}
-
-{% block body %}
-Hi {{ user.name }},
-
-{{ from_user.name }} has sent you a message in response to your submission to the assignment {{ assignment.title }}:
-
-{{ body }}
-{% endblock %}
