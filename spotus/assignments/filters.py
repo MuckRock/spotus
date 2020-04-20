@@ -25,7 +25,7 @@ class AssignmentFilterSet(django_filters.FilterSet):
         label="Staff Owned",
         widget=forms.Select(choices=NULL_BOOLEAN_CHOICES),
     )
-    # XXX make this an autocomplete
+    # should make this an autocomplete
     user = django_filters.ModelChoiceFilter(
         queryset=User.objects.exclude(assignments=None)
     )

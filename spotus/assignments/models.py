@@ -51,7 +51,6 @@ class Assignment(models.Model):
         on_delete=models.PROTECT,
         related_name="assignments",
     )
-    # XXX use auto datetime created field, updated_at?
     datetime_created = models.DateTimeField(_("datetime created"), default=timezone.now)
     datetime_opened = models.DateTimeField(_("datetime opened"), blank=True, null=True)
     datetime_closed = models.DateTimeField(_("datetime closed"), blank=True, null=True)
@@ -310,7 +309,6 @@ class Data(models.Model):
                 PyEmbed(
                     # we don't use the default discoverer because it contains a bug
                     # that makes it always match spotify
-                    # XXX see if they have fixed this yet
                     discoverer=ChainingDiscoverer(
                         [
                             FileDiscoverer(
@@ -446,7 +444,6 @@ class Response(models.Model):
         ),
     )
     ip_address = models.GenericIPAddressField(_("ip address"), blank=True, null=True)
-    # XXX created at field
     datetime = models.DateTimeField(_("datetime"), default=timezone.now)
     data = models.ForeignKey(
         verbose_name=_("data"),
