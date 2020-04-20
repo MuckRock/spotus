@@ -183,7 +183,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "spotus.utils.context_processors.settings_context",
+                "spotus.core.context_processors.settings_context",
                 "spotus.assignments.context_processors.choices",
             ],
         },
