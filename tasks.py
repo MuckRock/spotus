@@ -12,7 +12,6 @@ DJANGO_RUN = COMPOSE_RUN.format(service="spotus_django", cmd="{cmd}")
 DJANGO_RUN_USER = COMPOSE_RUN_OPT_USER.format(
     opt="", service="spotus_django", cmd="{cmd}"
 )
-WEB_OPEN = "xdg-open {} > /dev/null 2>&1"
 
 
 @task
@@ -166,10 +165,12 @@ def pip_compile(c, upgrade=False, package=None):
     else:
         upgrade_flag = ""
     c.run(
-        DJANGO_RUN_USER.format(
+        COMPOSE_RUN_OPT_USER.format(
+            opt="-e PIP_TOOLS_CACHE_DIR=/tmp/pip-tools-cache",
+            service="spotus_django",
             cmd=f"sh -c 'pip-compile {upgrade_flag} requirements/base.in && "
             f"pip-compile {upgrade_flag} requirements/local.in && "
-            f"pip-compile {upgrade_flag} requirements/production.in'"
+            f"pip-compile {upgrade_flag} requirements/production.in'",
         )
     )
 
