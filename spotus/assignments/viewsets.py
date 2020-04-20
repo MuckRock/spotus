@@ -56,15 +56,7 @@ class ResponseViewSet(
 
     def get_queryset(self):
         """Filter the queryset"""
-        # XXX this should be a queryset method
-        if self.request.user.is_staff:
-            return self.queryset
-        elif self.request.user.is_authenticated:
-            return self.queryset.filter(
-                Q(assignment__user=self.request.user) | Q(gallery=True)
-            ).distinct()
-        else:
-            return self.queryset.filter(gallery=True)
+        return self.queryset.get_viewable(self.request.user)
 
     class Filter(django_filters.FilterSet):
         """API Filter for Assignment Responses"""

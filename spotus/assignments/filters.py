@@ -26,7 +26,9 @@ class AssignmentFilterSet(django_filters.FilterSet):
         widget=forms.Select(choices=NULL_BOOLEAN_CHOICES),
     )
     # XXX make this an autocomplete
-    user = django_filters.ModelChoiceFilter(queryset=User.objects.all())
+    user = django_filters.ModelChoiceFilter(
+        queryset=User.objects.exclude(assignments=None)
+    )
 
     class Meta:
         model = Assignment

@@ -2,6 +2,22 @@
 **
 */
 
+function authenticateAjax() {
+    // Sets up authentication for AJAX transactions
+    var csrftoken = Cookie.get('csrftoken');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+}
+
 //import modal from './modal';
 //import showdown from 'showdown';
 
@@ -175,7 +191,7 @@ $(document).ready(function(){
     e.preventDefault();
     var mailLink = $("a.message-link[data-response='" + $("#id_response").val() + "']");
     $.ajax({
-      url: '/assignment/message/',
+      url: '/assignments/message/',
       type: 'post',
       data: $(this).serialize(),
       success: function() {
@@ -248,7 +264,7 @@ $(document).ready(function(){
         response.append(`
           <header class="textbox__header">
             <p class="from nocollapse">
-              <a href="/assignment/${data.results[i].id}/edit/" class="edit-link">
+              <a href="/assignments/${data.results[i].id}/edit/" class="edit-link">
                 ${pencil}
               </a>
               ${mailLink}
@@ -297,7 +313,7 @@ $(document).ready(function(){
         dataSection.append($("<p>").html(
           `<em>This submission was edited by ${data.results[i].edit_user} at
           ${data.results[i].edit_datetime}.` +
-          (editAccess ? `<a href="/assignment/${data.results[i].id}/revert">
+          (editAccess ? `<a href="/assignments/${data.results[i].id}/revert">
             View the original submission and, if necessary, revert.
           </a>` : '') +
           `</em>`
@@ -316,7 +332,7 @@ $(document).ready(function(){
     });
     $('.flag-checkbox').change(function(){
       $.ajax({
-        url: "/api_v1/assignment-responses/" + $(this).data("assignment") + "/",
+        url: "/api/assignment-responses/" + $(this).data("assignment") + "/",
         type: "PATCH",
         data: {
           'flag': $(this).prop("checked")
@@ -325,7 +341,7 @@ $(document).ready(function(){
     });
     $('.gallery-checkbox').change(function(){
       $.ajax({
-        url: "/api_v1/assignment-responses/" + $(this).data("assignment") + "/",
+        url: "/api/assignment-responses/" + $(this).data("assignment") + "/",
         type: "PATCH",
         data: {
           'gallery': $(this).prop("checked")
@@ -349,7 +365,7 @@ $(document).ready(function(){
       $(".embed").each(function(){
         var embed = $(this);
         $.ajax({
-          url: "/assignment/oembed/",
+          url: "/assignments/oembed/",
           type: "GET",
           data: {"url": $(this).data('url')},
           success: function(data) {
@@ -367,7 +383,7 @@ $(document).ready(function(){
       tagTimeoutIds[assignment] = setTimeout(function() {
         // Runs 1 second (1000 ms) after the last change
         $.ajax({
-          url: "/api_v1/assignment-responses/" + assignment + "/",
+          url: "/api/assignment-responses/" + assignment + "/",
           type: "PATCH",
           data: {'tags': tags}
         });
@@ -417,7 +433,7 @@ $(document).ready(function(){
       $(".embed").each(function(){
         var embed = $(this);
         $.ajax({
-          url: "/assignment/oembed/",
+          url: "/assignments/oembed/",
           type: "GET",
           data: {"url": $(this).data('url')},
           success: function(data) {
@@ -437,7 +453,7 @@ $(document).ready(function(){
       );
     }
     $.ajax({
-      url: "/api_v1/assignment-responses/",
+      url: "/api/assignment-responses/",
       type: 'GET',
       data: {
         'assignment': $("section.assignment-responses").data("assignment"),
@@ -525,6 +541,7 @@ $(document).ready(function(){
   $("#assignment-responses #assignment-search").on(
     "input propertychange change", searchHandler);
 
+  authenticateAjax();
 });
 
 /* tabs.js

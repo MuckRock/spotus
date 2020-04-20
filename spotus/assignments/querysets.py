@@ -48,3 +48,11 @@ class ResponseQuerySet(models.QuerySet):
     def get_user_count(self):
         """Get the number of distinct users who have responded"""
         return self.aggregate(Count("user", distinct=True))["user__count"]
+
+    def get_viewable(self, user):
+        if user.is_staff:
+            return self
+        elif user.is_authenticated:
+            return self.filter(Q(assignment__user=user) | Q(gallery=True)).distinct()
+        else:
+            return self.filter(gallery=True)
