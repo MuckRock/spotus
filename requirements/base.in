@@ -18,7 +18,6 @@ rules
 django  # pyup: < 3.1  # https://www.djangoproject.com/
 django-environ  # https://github.com/joke2k/django-environ
 django-model-utils  # https://github.com/jazzband/django-model-utils
-django-allauth  # https://github.com/pennersr/django-allauth
 django-crispy-forms  # https://github.com/django-crispy-forms/django-crispy-forms
 django-compressor  # https://github.com/django-compressor/django-compressor
 django-redis  # https://github.com/niwinz/django-redis
@@ -29,3 +28,6 @@ django-taggit
 django-choices
 django-filter
 django-markdownify
+squarelet-auth
+social-auth-app-django
+sorl-thumbnail

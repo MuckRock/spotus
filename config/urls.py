@@ -4,28 +4,30 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
-from django.views.generic import RedirectView, TemplateView
-from rest_framework.authtoken.views import obtain_auth_token
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="assignments:index"), name="index"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("users/", include("spotus.users.urls", namespace="users")),
-    path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     path("assignments/", include("spotus.assignments.urls", namespace="assignments")),
+    path("accounts/", include("social_django.urls", namespace="social")),
+    path("squarelet/", include("squarelet_auth.urls", namespace="squarelet_auth")),
+    path(
+        "organizations/",
+        include(
+            "squarelet_auth.organizations.urls",
+            namespace="squarelet_auth_organizations",
+        ),
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # API URLS
 urlpatterns += [
     # API base url
-    path("api/", include("config.api_router")),
-    # DRF auth token
-    path("auth-token/", obtain_auth_token),
+    path("api/", include("config.api_router"))
 ]
 
 if settings.DEBUG:

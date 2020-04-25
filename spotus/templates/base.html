@@ -12,6 +12,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {% if meta_noindex %}<meta name="robots" content="noindex">{% endif %}
     {% compress css %}
+      <style type="text/css">
+        @font-face {
+          font-family: 'Source Sans Pro';
+          src: url("{% static 'fonts/SourceSansPro-Regular.ttf' %}");
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'Source Sans Pro';
+          src: url("{% static 'fonts/SourceSansPro-Italic.ttf' %}");
+          font-weight: 400;
+          font-style: italic;
+        }
+        @font-face {
+          font-family: 'Source Sans Pro';
+          src: url("{% static 'fonts/SourceSansPro-Semibold.ttf' %}");
+          font-weight: 500;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'Source Sans Pro';
+          src: url("{% static 'fonts/SourceSansPro-SemiboldItalic.ttf' %}");
+          font-weight: 500;
+          font-style: italic;
+        }
+        @font-face {
+          font-family: 'Source Code Pro';
+          src: url("{% static 'fonts/SourceCodePro-Regular.ttf' %}");
+          font-weight: normal;
+          font-style: normal;
+        }
+      </style>
       <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}" />
     {% endcompress %}
     {% block styles %}

@@ -22,17 +22,17 @@ bleach==3.1.4             # via -r requirements/./base.txt, django-markdownify
 boto3==1.12.41            # via -r requirements/./base.txt, smart-open
 boto==2.49.0              # via -r requirements/./base.txt, smart-open
 botocore==1.15.41         # via -r requirements/./base.txt, boto3, s3transfer
-celery==4.4.2             # via -r requirements/./base.txt, django-celery-beat, flower
+celery==4.4.2             # via -r requirements/./base.txt, django-celery-beat, flower, squarelet-auth
 certifi==2020.4.5.1       # via -r requirements/./base.txt, requests
-cffi==1.14.0              # via -r requirements/./base.txt, argon2-cffi
+cffi==1.14.0              # via -r requirements/./base.txt, argon2-cffi, cryptography
 cfgv==3.1.0               # via pre-commit
 chardet==3.0.4            # via -r requirements/./base.txt, requests
 click==7.1.1              # via black, pip-tools
 coverage==5.0.4           # via -r requirements/local.in, django-coverage-plugin
+cryptography==2.9.1       # via -r requirements/./base.txt, social-auth-core
 decorator==4.4.2          # via ipython, traitlets
-defusedxml==0.6.0         # via -r requirements/./base.txt, python3-openid
+defusedxml==0.6.0         # via -r requirements/./base.txt, python3-openid, social-auth-core
 distlib==0.3.0            # via virtualenv
-django-allauth==0.41.0    # via -r requirements/./base.txt
 django-appconf==1.0.4     # via -r requirements/./base.txt, django-compressor
 django-celery-beat==2.0.0  # via -r requirements/./base.txt
 django-choices==1.7.1     # via -r requirements/./base.txt
@@ -50,9 +50,10 @@ django-redis==4.11.0      # via -r requirements/./base.txt
 django-stubs==1.5.0       # via -r requirements/local.in
 django-taggit==1.2.0      # via -r requirements/./base.txt
 django-timezone-field==4.0  # via -r requirements/./base.txt, django-celery-beat
-django==3.0.5             # via -r requirements/./base.txt, django-allauth, django-appconf, django-celery-beat, django-choices, django-debug-toolbar, django-filter, django-markdownify, django-model-utils, django-redis, django-stubs, django-taggit, django-timezone-field, djangorestframework
+django==3.0.5             # via -r requirements/./base.txt, django-appconf, django-celery-beat, django-choices, django-debug-toolbar, django-filter, django-markdownify, django-model-utils, django-redis, django-stubs, django-taggit, django-timezone-field, djangorestframework, squarelet-auth
 djangorestframework==3.11.0  # via -r requirements/./base.txt
 docutils==0.15.2          # via -r requirements/./base.txt, botocore, sphinx
+ecdsa==0.15               # via -r requirements/./base.txt, python-jose
 entrypoints==0.3          # via flake8
 factory-boy==2.12.0       # via -r requirements/local.in
 faker==4.0.3              # via factory-boy
@@ -82,7 +83,7 @@ more-itertools==8.2.0     # via pytest
 mypy-extensions==0.4.3    # via mypy
 mypy==0.770               # via -r requirements/local.in, django-stubs
 nodeenv==1.3.5            # via pre-commit
-oauthlib==3.1.0           # via -r requirements/./base.txt, requests-oauthlib
+oauthlib==3.1.0           # via -r requirements/./base.txt, requests-oauthlib, social-auth-core
 packaging==20.3           # via pytest, pytest-sugar, sphinx
 parso==0.7.0              # via jedi
 pathspec==0.8.0           # via black
@@ -96,11 +97,13 @@ prompt-toolkit==3.0.5     # via ipython
 psycopg2==2.8.5           # via -r requirements/local.in
 ptyprocess==0.6.0         # via pexpect
 py==1.8.1                 # via pytest
+pyasn1==0.4.8             # via -r requirements/./base.txt, python-jose, rsa
 pycodestyle==2.5.0        # via flake8
 pycparser==2.20           # via -r requirements/./base.txt, cffi
 pyembed==1.3.3            # via -r requirements/./base.txt
 pyflakes==2.1.1           # via flake8
 pygments==2.6.1           # via ipython, sphinx
+pyjwt==1.7.1              # via -r requirements/./base.txt, social-auth-core
 pylint-celery==0.3        # via -r requirements/local.in
 pylint-django==2.0.14     # via -r requirements/local.in
 pylint-plugin-utils==0.6  # via pylint-celery, pylint-django
@@ -111,21 +114,26 @@ pytest-sugar==0.9.2       # via -r requirements/local.in
 pytest==5.3.5             # via -r requirements/local.in, pytest-django, pytest-sugar
 python-crontab==2.4.1     # via -r requirements/./base.txt, django-celery-beat
 python-dateutil==2.8.1    # via -r requirements/./base.txt, botocore, faker, python-crontab
+python-jose==3.1.0        # via -r requirements/./base.txt, social-auth-core
 python-slugify==4.0.0     # via -r requirements/./base.txt
-python3-openid==3.1.0     # via -r requirements/./base.txt, django-allauth
+python3-openid==3.1.0     # via -r requirements/./base.txt, social-auth-core
 pytz==2019.3              # via -r requirements/./base.txt, babel, celery, django, django-timezone-field, flower
 pyyaml==5.3.1             # via pre-commit
 rcssmin==1.0.6            # via -r requirements/./base.txt, django-compressor
 redis==3.4.1              # via -r requirements/./base.txt, django-redis
 regex==2020.4.4           # via black
-requests-oauthlib==1.3.0  # via -r requirements/./base.txt, django-allauth
-requests==2.23.0          # via -r requirements/./base.txt, django-allauth, pyembed, requests-oauthlib, smart-open, sphinx
+requests-oauthlib==1.3.0  # via -r requirements/./base.txt, social-auth-core
+requests==2.23.0          # via -r requirements/./base.txt, pyembed, requests-oauthlib, smart-open, social-auth-core, sphinx, squarelet-auth
 rjsmin==1.1.0             # via -r requirements/./base.txt, django-compressor
+rsa==4.0                  # via -r requirements/./base.txt, python-jose
 rules==2.2                # via -r requirements/./base.txt
 s3transfer==0.3.3         # via -r requirements/./base.txt, boto3
-six==1.14.0               # via -r requirements/./base.txt, argon2-cffi, astroid, bleach, django-choices, django-compressor, django-coverage-plugin, django-extensions, packaging, pip-tools, python-dateutil, traitlets, virtualenv
+six==1.14.0               # via -r requirements/./base.txt, argon2-cffi, astroid, bleach, cryptography, django-choices, django-compressor, django-coverage-plugin, django-extensions, ecdsa, packaging, pip-tools, python-dateutil, python-jose, social-auth-app-django, social-auth-core, traitlets, virtualenv
 smart-open==1.11.1        # via -r requirements/./base.txt
 snowballstemmer==2.0.0    # via sphinx
+social-auth-app-django==3.1.0  # via -r requirements/./base.txt
+social-auth-core[openidconnect]==3.3.3  # via -r requirements/./base.txt, social-auth-app-django, squarelet-auth
+sorl-thumbnail==12.6.3    # via -r requirements/./base.txt
 soupsieve==2.0            # via -r requirements/./base.txt, beautifulsoup4
 sphinx==3.0.0             # via -r requirements/local.in
 sphinxcontrib-applehelp==1.0.2  # via sphinx
@@ -135,6 +143,7 @@ sphinxcontrib-jsmath==1.0.1  # via sphinx
 sphinxcontrib-qthelp==1.0.3  # via sphinx
 sphinxcontrib-serializinghtml==1.1.4  # via sphinx
 sqlparse==0.3.1           # via -r requirements/./base.txt, django, django-debug-toolbar
+squarelet-auth==0.0.21    # via -r requirements/./base.txt
 termcolor==1.1.0          # via pytest-sugar
 testfixtures==6.14.1      # via flake8-isort
 text-unidecode==1.3       # via -r requirements/./base.txt, faker, python-slugify

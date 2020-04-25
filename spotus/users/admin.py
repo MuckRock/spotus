@@ -1,18 +1,20 @@
 # Django
 from django.contrib import admin
-from django.contrib.auth import admin as auth_admin, get_user_model
+from django.contrib.auth import admin as auth_admin
 
 # SpotUs
-from spotus.users.forms import UserChangeForm, UserCreationForm
-
-User = get_user_model()
+from spotus.users.models import User
 
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
 
-    form = UserChangeForm
-    add_form = UserCreationForm
-    fieldsets = (("User", {"fields": ("name",)}),) + auth_admin.UserAdmin.fieldsets
-    list_display = ["username", "name", "is_superuser"]
-    search_fields = ["name"]
+    list_display = (
+        "username",
+        "name",
+        "email",
+        "is_staff",
+        "is_superuser",
+        "is_active",
+    )
+    search_fields = ("username", "name", "email")

@@ -2,7 +2,7 @@
 from invoke import task
 
 COMPOSE_PREFIX = "docker-compose -f local.yml"
-COMPOSE_BUILD = f"{COMPOSE_PREFIX} build {{opt}} {{service}}"
+COMPOSE_BUILD = f"COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 {COMPOSE_PREFIX} build {{opt}} {{service}}"
 COMPOSE_RUN_OPT = f"{COMPOSE_PREFIX} run {{opt}} --rm {{service}} {{cmd}}"
 COMPOSE_RUN_OPT_USER = COMPOSE_RUN_OPT.format(
     opt="-u $(id -u):$(id -g) {opt}", service="{service}", cmd="{cmd}"

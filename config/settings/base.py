@@ -66,21 +66,21 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
     "crispy_forms",
     "django_celery_beat",
     "markdownify",
     "rest_framework",
-    "rest_framework.authtoken",
     "rules.apps.AutodiscoverRulesConfig",
+    "social_django",
+    "sorl.thumbnail",
+    "squarelet_auth.organizations.apps.OrganizationsConfig",
     "taggit",
 ]
 
 LOCAL_APPS = [
     "spotus.core.apps.CoreConfig",
     "spotus.users.apps.UsersConfig",
+    "spotus.organizations.apps.OrganizationsConfig",
     "spotus.assignments.apps.AssignmentsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -91,15 +91,36 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
     "rules.permissions.ObjectPermissionBackend",
+    "squarelet_auth.backends.SquareletBackend",
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
-# https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "users:redirect"
-# https://docs.djangoproject.com/en/dev/ref/settings/#login-url
-LOGIN_URL = "account_login"
+SQUARELET_ORGANIZATION_MODEL = "organizations.Organization"
+LOGIN_REDIRECT_URL = "assignments:index"
+
+# SQUARELET AUTHENTICATION
+# ------------------------------------------------------------------------------
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_SQUARELET_KEY = env("SQUARELET_KEY")
+SOCIAL_AUTH_SQUARELET_SECRET = env("SQUARELET_SECRET")
+SOCIAL_AUTH_SQUARELET_SCOPE = ["uuid", "organizations", "preferences"]
+SOCIAL_AUTH_SQUARELET_AUTH_EXTRA_ARGUMENTS = {"intent": "spotus"}
+SOCIAL_AUTH_TRAILING_SLASH = False
+
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "squarelet_auth.pipeline.associate_by_uuid",
+    "squarelet_auth.pipeline.save_info",
+    "squarelet_auth.pipeline.save_session_data",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+)
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -281,19 +302,6 @@ CELERY_TASK_TIME_LIMIT = 5 * 60
 CELERY_TASK_SOFT_TIME_LIMIT = 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-# django-allauth
-# ------------------------------------------------------------------------------
-ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_AUTHENTICATION_METHOD = "username"
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_REQUIRED = True
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "spotus.users.adapters.AccountAdapter"
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "spotus.users.adapters.SocialAccountAdapter"
 # django-compressor
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
@@ -314,3 +322,11 @@ REST_FRAMEWORK = {
 # ------------------------------------------------------------------------------
 TAGGIT_CASE_INSENSITIVE = True
 SPOTUS_URL = env("SPOTUS_URL", default="http://dev.spot.us")
+SQUARELET_URL = env("SQUARELET_URL", default="http://dev.squarelet.com")
+BASE_URL = SPOTUS_URL
+
+# for sorl-thumbnails to avoid error
+# https://github.com/jazzband/sorl-thumbnail/issues/564
+THUMBNAIL_PRESERVE_FORMAT = True
+# For easy thumbnails
+THUMBNAIL_PRESERVE_EXTENSIONS = ("png",)

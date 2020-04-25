@@ -1,3 +1,7 @@
+{% load thumbnail %}
+{% load static %}
+{% load nbsp %}
+
 <header class="global-header">
   <nav class="global-navigation space-between mb0" id="nav">
     <div class="nav-section align-center mb0" id="site-nav">
@@ -8,6 +12,134 @@
         <li><a class="nav-item" href="{% url "assignments:index" %}">Assignments</a></li>
       </ul>
     </div>
+
+    <div class="nav-section" id="user-nav">
+      <ul>
+        <li>
+          <a class="blue nav-item" href="{% url "assignments:create" %}">
+            <span class="label">Create an Assignment</span>
+          </a>
+        </li>
+        {% if user.is_authenticated %}
+          {% with organization=user.organization %}
+            <li class="dropdown dropdown--right">
+              <a href="{{ user.get_absolute_url }}" class="black nav-item align-center avatar-container" data-for="#profile-dropdown">
+                {% thumbnail user.avatar_url "62x62" as avatar %}
+                  <img class="round avatar mb0" src="{{ avatar.url }}" height="31" width="31">
+                {% empty %}
+                  <img class="round avatar mb0" src="{% static "img/defaultavatar.png" %}" height="31" width="31">
+                {% endthumbnail %}
+                <span class="label">{{ user.name }}</span>
+                {% if not organization.individual %}
+                  {% thumbnail organization.avatar_url "62x62" as avatar %}
+                    <img class="round avatar mb0" src="{{ avatar.url }}" height="31" width="31">
+                  {% empty %}
+                    <img class="round avatar mb0" src="{% static "img/defaultavatar.png" %}" height="31" width="31">
+                  {% endthumbnail %}
+                  <span class="label">{{ organization.display_name }}</span>
+                {% endif %}
+              </a>
+
+              <ul id="profile-dropdown">
+                {% if user.is_staff %}
+                  <li class="separator">
+                    <a class="nav-item" href="
+                      {% if sidebar_admin_url %}
+                        {{ sidebar_admin_url }}
+                      {% else %}
+                        /admin/
+                      {% endif %}">
+                      Admin
+                    </a>
+                  </li>
+                {% endif %}
+                {% if not organization.individual %}
+                  <li>
+                    <a class="nav-item" href="{{ organization.get_absolute_url }}">
+                      Your&nbsp;Organization
+                    </a>
+                  </li>
+                {% endif %}
+                <li class="separator">
+                  <a class="nav-item" href="{{ user.get_absolute_url }}">
+                    Your&nbsp;Profile
+                  </a>
+                </li>
+
+                {% with organizations=user.organizations.all %}
+                  {% if organizations|length > 1 %}
+                    <li class="separator nav-item nolink">Switch&nbsp;Organization</li>
+                    {% for org in organizations %}
+                      {% if org != organization %}
+                        <li{% if forloop.last %} class="separator"{% endif %}>
+                          <form action="{% url "squarelet_auth_organizations:activate" %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <input type="hidden" name="organization" value="{{ org.pk }}">
+                            <button class="black nav-item align-center avatar-container">
+                              {% thumbnail org.avatar_url "62x62" as avatar %}
+                                <img class="round avatar mb0" src="{{ avatar.url }}" height="31" width="31">
+                              {% empty %}
+                                <img class="round avatar mb0" src="{% static "img/defaultavatar.png" %}" height="31" width="31">
+                              {% endthumbnail %}
+                              <span>{{ org.display_name|nbsp }}</span>
+                            </button>
+                          </form>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                <li>
+                  <a class="nav-item" href="{% url "squarelet_auth:logout" %}">
+                    Log&nbsp;Out
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            {% comment %}
+            <li class="dropdown dropdown--right">
+              <span class="black nav-item" data-for="#options-dropdown">
+                {% include "lib/component/icon/options.svg" %}
+              </span>
+              <ul id="options-dropdown">
+                {% if user.is_staff %}
+                  <li>
+                    <a class="nav-item" href="
+                      {% if sidebar_admin_url %}
+                        {{ sidebar_admin_url }}
+                      {% else %}
+                        /admin/
+                      {% endif %}">
+                      Admin
+                    </a>
+                  </li>
+                {% endif %}
+                <li>
+                  <a class="nav-item" href="{% url "squarelet_auth:logout" %}">
+                    Log&nbsp;Out
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% endcomment %}
+          {% endwith %}
+        {% else %}
+          <li>
+            <a href="{% url "squarelet_auth:signup" %}" class="sign-up black nav-item">
+              Sign&nbsp;Up
+            </a>
+          </li>
+          <li>
+            <a href="{% url "squarelet_auth:login" %}?next={{ request.get_full_path }}" class="log-in black nav-item">
+              Log&nbsp;In
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+
   </nav>
 </header>
 
