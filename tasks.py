@@ -189,3 +189,9 @@ def heroku(c, staging=False):
     else:
         app = "spotus"
     c.run(f"heroku run --app {app} python manage.py shell_plus", pty=True)
+
+
+@task
+def up(c):
+    """Start the docker images"""
+    c.run("docker-compose -f local.yml up -d")
