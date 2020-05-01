@@ -293,7 +293,7 @@ class Data(models.Model):
         on_delete=models.CASCADE,
         related_name="data",
     )
-    url = models.URLField(_("URL"), max_length=255)
+    url = models.URLField(_("URL"), max_length=255, blank=True)
     metadata = JSONField(_("metadata"), default=dict, blank=True)
 
     objects = DataQuerySet.as_manager()
