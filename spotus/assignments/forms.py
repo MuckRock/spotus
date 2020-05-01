@@ -95,16 +95,8 @@ class DataCsvForm(forms.Form):
     )
 
     def clean_data_csv(self):
-        """If there is a data CSV, ensure it has a URL column"""
-        # XXX may want to make url column optional
-        data_csv = self.cleaned_data["data_csv"]
-        if data_csv:
-            reader = csv.reader(data_csv)
-            headers = [h.lower() for h in next(reader)]
-            if "url" not in headers:
-                raise forms.ValidationError(_("Data CSV should contain a URL column"))
-            data_csv.seek(0)
-        return data_csv
+        """Add validation checks here"""
+        return self.cleaned_data["data_csv"]
 
     def process_data_csv(self, assignment):
         """Create the assignment data from the uploaded CSV"""
