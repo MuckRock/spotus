@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 # Standard Library
 import csv
 import json
+import io
 
 # SpotUs
 from spotus.assignments.constants import DOCUMENT_URL_RE, PROJECT_URL_RE
@@ -104,7 +105,8 @@ class DataCsvForm(forms.Form):
         data_csv = self.cleaned_data["data_csv"]
         doccloud_each_page = self.cleaned_data["doccloud_each_page"]
         if data_csv:
-            reader = csv.reader(data_csv)
+            # python3 wants csvs decoded
+            reader = csv.reader(io.StringIO(data_csv.read().decode('utf-8')))
             headers = [h.lower() for h in next(reader)]
             for line in reader:
                 data = dict(zip(headers, line))
