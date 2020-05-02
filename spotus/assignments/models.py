@@ -303,35 +303,36 @@ class Data(models.Model):
 
     def embed(self):
         """Get the html to embed into the assignment"""
-        try:
-            # first try to get embed code from oEmbed
-            return mark_safe(
-                PyEmbed(
-                    # we don't use the default discoverer because it contains a bug
-                    # that makes it always match spotify
-                    discoverer=ChainingDiscoverer(
-                        [
-                            FileDiscoverer(
-                                resource_filename(__name__, "oembed_providers.json")
-                            ),
-                            AutoDiscoverer(),
-                        ]
-                    )
-                ).embed(self.url, max_height=400)
-            )
-        except PyEmbedConsumerError:
-            # if this is a private document cloud document, it will not have
-            # an oEmbed, create the embed manually
-            doc_match = DOCUMENT_URL_RE.match(self.url)
-            if doc_match:
+        if self.url:
+            try:
+                # first try to get embed code from oEmbed
                 return mark_safe(
-                    DOCCLOUD_EMBED.format(doc_id=doc_match.group("doc_id"))
+                    PyEmbed(
+                        # we don't use the default discoverer because it contains a bug
+                        # that makes it always match spotify
+                        discoverer=ChainingDiscoverer(
+                            [
+                                FileDiscoverer(
+                                    resource_filename(__name__, "oembed_providers.json")
+                                ),
+                                AutoDiscoverer(),
+                            ]
+                        )
+                    ).embed(self.url, max_height=400)
                 )
-            else:
-                # fall back to a simple iframe
-                return format_html(
-                    '<iframe src="{}" width="100%" height="400px"></iframe>', self.url
-                )
+            except PyEmbedConsumerError:
+                # if this is a private document cloud document, it will not have
+                # an oEmbed, create the embed manually
+                doc_match = DOCUMENT_URL_RE.match(self.url)
+                if doc_match:
+                    return mark_safe(
+                        DOCCLOUD_EMBED.format(doc_id=doc_match.group("doc_id"))
+                    )
+                else:
+                    # fall back to a simple iframe
+                    return format_html(
+                        '<iframe src="{}" width="100%" height="400px"></iframe>', self.url
+                    )
 
     class Meta:
         verbose_name = _("assignment data")

@@ -25,6 +25,9 @@ services:
       squarelet_default:
         aliases:
           - dev.spot.us
+    stdin_open: true
+    tty: true
+
 
   spotus_postgres:
     build:
