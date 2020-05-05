@@ -36,11 +36,18 @@ class AssignmentForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         assignment = kwargs.pop("assignment")
+        datum = assignment.data.last()
+        metadata = datum.metadata if datum else None
+
         user = kwargs.pop("user")
         super().__init__(*args, **kwargs)
 
         for field in assignment.fields.filter(deleted=False):
-            self.fields[str(field.pk)] = field.get_form_field()
+            # swap in template tags from metadata
+            form_field = field.get_form_field()
+            form_field.label = form_field.label.format_map(metadata)
+            form_field.help_text = form_field.help_text.format_map(metadata)
+            self.fields[str(field.pk)] = form_field
         if user.is_anonymous and assignment.registration != "off":
             required = assignment.registration == "required"
             self.fields["full_name"] = forms.CharField(
@@ -122,14 +129,8 @@ class DataCsvForm(forms.Form):
                         data,
                         doccloud_each_page,
                     )
-                elif url:
-                    # skip invalid URLs
-                    try:
-                        url_validator(url)
-                    except forms.ValidationError:
-                        pass
-                    else:
-                        assignment.data.create(url=url, metadata=data)
+                else:
+                    assignment.data.create(url=url, metadata=data)
 
 
 class AssignmentCreationForm(forms.ModelForm, DataCsvForm):
