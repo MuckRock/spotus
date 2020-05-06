@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 # Standard Library
 import csv
 import json
-import io
+import codecs
 
 # SpotUs
 from spotus.assignments.constants import DOCUMENT_URL_RE, PROJECT_URL_RE
@@ -36,7 +36,7 @@ class AssignmentForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         assignment = kwargs.pop("assignment")
-        datum = assignment.data.last()
+        datum = kwargs.pop("datum")
         metadata = datum.metadata if datum else None
 
         user = kwargs.pop("user")
@@ -102,10 +102,6 @@ class DataCsvForm(forms.Form):
         required=False,
     )
 
-    def clean_data_csv(self):
-        """Add validation checks here"""
-        return self.cleaned_data["data_csv"]
-
     def process_data_csv(self, assignment):
         """Create the assignment data from the uploaded CSV"""
         url_validator = URLValidator()
@@ -113,7 +109,7 @@ class DataCsvForm(forms.Form):
         doccloud_each_page = self.cleaned_data["doccloud_each_page"]
         if data_csv:
             # python3 wants csvs decoded
-            reader = csv.reader(io.StringIO(data_csv.read().decode('utf-8')))
+            reader = csv.reader(codecs.iterdecode(data_csv, "utf-8"))
             headers = [h.lower() for h in next(reader)]
             for line in reader:
                 data = dict(zip(headers, line))

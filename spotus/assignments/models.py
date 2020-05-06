@@ -331,7 +331,8 @@ class Data(models.Model):
                 else:
                     # fall back to a simple iframe
                     return format_html(
-                        '<iframe src="{}" width="100%" height="400px"></iframe>', self.url
+                        '<iframe src="{}" width="100%" height="400px"></iframe>',
+                        self.url,
                     )
 
     class Meta:

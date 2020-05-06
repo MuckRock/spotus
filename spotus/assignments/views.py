@@ -224,7 +224,13 @@ class AssignmentFormView(BaseDetailView, FormView):
     def get_form_kwargs(self):
         """Add the assignment object to the form"""
         kwargs = super().get_form_kwargs()
-        kwargs.update({"assignment": self.get_object(), "user": self.request.user})
+        kwargs.update(
+            {
+                "assignment": self.get_object(),
+                "user": self.request.user,
+                "datum": self.data,
+            }
+        )
         return kwargs
 
     def get_context_data(self, **kwargs):
