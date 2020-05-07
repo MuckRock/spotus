@@ -31,3 +31,4 @@ django-markdownify
 squarelet-auth
 social-auth-app-django
 sorl-thumbnail
+django-premailer

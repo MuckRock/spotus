@@ -27,14 +27,14 @@
                 {% thumbnail user.avatar_url "62x62" as avatar %}
                   <img class="round avatar mb0" src="{{ avatar.url }}" height="31" width="31">
                 {% empty %}
-                  <img class="round avatar mb0" src="{% static "img/defaultavatar.png" %}" height="31" width="31">
+                  <img class="round avatar mb0" src="{% static "images/defaultavatar.png" %}" height="31" width="31">
                 {% endthumbnail %}
                 <span class="label">{{ user.name }}</span>
                 {% if not organization.individual %}
                   {% thumbnail organization.avatar_url "62x62" as avatar %}
                     <img class="round avatar mb0" src="{{ avatar.url }}" height="31" width="31">
                   {% empty %}
-                    <img class="round avatar mb0" src="{% static "img/defaultavatar.png" %}" height="31" width="31">
+                    <img class="round avatar mb0" src="{% static "images/defaultavatar.png" %}" height="31" width="31">
                   {% endthumbnail %}
                   <span class="label">{{ organization.display_name }}</span>
                 {% endif %}
@@ -80,7 +80,7 @@
                               {% thumbnail org.avatar_url "62x62" as avatar %}
                                 <img class="round avatar mb0" src="{{ avatar.url }}" height="31" width="31">
                               {% empty %}
-                                <img class="round avatar mb0" src="{% static "img/defaultavatar.png" %}" height="31" width="31">
+                                <img class="round avatar mb0" src="{% static "images/defaultavatar.png" %}" height="31" width="31">
                               {% endthumbnail %}
                               <span>{{ org.display_name|nbsp }}</span>
                             </button>
