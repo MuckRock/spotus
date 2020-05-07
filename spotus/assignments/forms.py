@@ -6,9 +6,9 @@ from django.core.validators import URLValidator, validate_email
 from django.utils.translation import gettext_lazy as _
 
 # Standard Library
+import codecs
 import csv
 import json
-import codecs
 
 # SpotUs
 from spotus.assignments.constants import DOCUMENT_URL_RE, PROJECT_URL_RE

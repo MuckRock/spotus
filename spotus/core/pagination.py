@@ -2,7 +2,7 @@
 Provides a pagination class for the API
 """
 
-# Third Party
+# Django
 from rest_framework.pagination import PageNumberPagination
 
 
