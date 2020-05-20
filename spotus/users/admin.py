@@ -18,3 +18,20 @@ class UserAdmin(auth_admin.UserAdmin):
         "is_active",
     )
     search_fields = ("username", "name", "email")
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (("Personal info"), {"fields": ("name", "email")}),
+        (
+            ("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        (("Important dates"), {"fields": ("last_login", "created_at", "updated_at")}),
+    )
