@@ -338,7 +338,7 @@ class AssignmentFormView(BaseDetailView, FormView):
 
     def miniregister(self, *args, **kwargs):
         # XXX copy mini reg mixin over from muckrock
-        raise NotImplementedError
+        pass # raise NotImplementedError
 
 
 class AssignmentEditResponseView(BaseDetailView, FormView):
