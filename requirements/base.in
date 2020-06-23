@@ -12,6 +12,7 @@ smart_open
 bleach
 pyembed
 rules
+ipython
 
 # Django
 # ------------------------------------------------------------------------------
@@ -32,3 +33,4 @@ squarelet-auth
 social-auth-app-django
 sorl-thumbnail
 django-premailer
+django-extensions  # https://github.com/django-extensions/django-extensions
