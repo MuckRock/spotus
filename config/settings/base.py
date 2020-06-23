@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "sorl.thumbnail",
     "squarelet_auth.organizations.apps.OrganizationsConfig",
     "taggit",
+    "django_extensions",
 ]
 
 LOCAL_APPS = [
