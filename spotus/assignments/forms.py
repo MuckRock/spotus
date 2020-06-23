@@ -44,8 +44,10 @@ class AssignmentForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         def sub(text, metadata):
-            text = re.sub("{ *", "{", text)
-            text = re.sub(" *}", "}", text)
+            if text is None:
+                return text
+            text = re.sub("{\s*", "{", text)
+            text = re.sub("\s*}", "}", text)
             return text.format_map(metadata)
 
         for field in assignment.fields.filter(deleted=False):
@@ -53,6 +55,7 @@ class AssignmentForm(forms.Form):
             form_field = field.get_form_field()
             form_field.label = sub(form_field.label, metadata)
             form_field.help_text = sub(form_field.help_text, metadata)
+            form_field.initial = sub(form_field.initial, metadata)
             self.fields[str(field.pk)] = form_field
         if user.is_anonymous and assignment.registration != "off":
             required = assignment.registration == "required"
