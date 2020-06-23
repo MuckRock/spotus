@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 import codecs
 import csv
 import json
+import re
 
 # SpotUs
 from spotus.assignments.constants import DOCUMENT_URL_RE, PROJECT_URL_RE
@@ -42,11 +43,16 @@ class AssignmentForm(forms.Form):
         user = kwargs.pop("user")
         super().__init__(*args, **kwargs)
 
+        def sub(text, metadata):
+            text = re.sub("{ *", "{", text)
+            text = re.sub(" *}", "}", text)
+            return text.format_map(metadata)
+
         for field in assignment.fields.filter(deleted=False):
             # swap in template tags from metadata
             form_field = field.get_form_field()
-            form_field.label = form_field.label.format_map(metadata)
-            form_field.help_text = form_field.help_text.format_map(metadata)
+            form_field.label = sub(form_field.label, metadata)
+            form_field.help_text = sub(form_field.help_text, metadata)
             self.fields[str(field.pk)] = form_field
         if user.is_anonymous and assignment.registration != "off":
             required = assignment.registration == "required"
