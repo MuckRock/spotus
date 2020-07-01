@@ -12,6 +12,7 @@ import json
 import re
 
 # SpotUs
+from spotus.assignments.choices import Registration
 from spotus.assignments.constants import DOCUMENT_URL_RE, PROJECT_URL_RE
 from spotus.assignments.fields import FIELD_DICT
 from spotus.assignments.models import Assignment, Data, Response
@@ -57,8 +58,8 @@ class AssignmentForm(forms.Form):
             form_field.help_text = sub(form_field.help_text, metadata)
             form_field.initial = sub(form_field.initial, metadata)
             self.fields[str(field.pk)] = form_field
-        if user.is_anonymous and assignment.registration != "off":
-            required = assignment.registration == "required"
+        if user.is_anonymous and assignment.registration != Registration.off:
+            required = assignment.registration == Registration.required
             self.fields["full_name"] = forms.CharField(
                 label="Full Name or Handle (Public)", required=required
             )
