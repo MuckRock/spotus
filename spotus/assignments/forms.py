@@ -64,13 +64,6 @@ class AssignmentForm(forms.Form):
                 label="Full Name or Handle (Public)", required=required
             )
             self.fields["email"] = forms.EmailField(required=required)
-            # XXX newsletter?
-            self.fields["newsletter"] = forms.BooleanField(
-                initial=True,
-                required=False,
-                label="Get MuckRock's weekly newsletter with "
-                "FOIA news, tips, and more",
-            )
         if assignment.ask_public:
             # move public to the end
             self.fields["public"] = self.fields.pop("public")

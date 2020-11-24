@@ -29,6 +29,7 @@ from itertools import zip_longest
 # Third Party
 import requests
 from ipware import get_client_ip
+from squarelet_auth.mixins import MiniregMixin
 
 # SpotUs
 from spotus.assignments.choices import Registration, Status
@@ -40,7 +41,7 @@ from spotus.assignments.forms import (
     DataFormset,
     MessageResponseForm,
 )
-from spotus.assignments.models import Assignment, Data, Field, Response, Value
+from spotus.assignments.models import Assignment, Data, Field, Response
 from spotus.assignments.tasks import export_csv
 from spotus.core.email import TemplateEmail
 from spotus.core.views import FilterListView
@@ -146,7 +147,7 @@ class AssignmentDetailView(DetailView):
         return context
 
 
-class AssignmentFormView(BaseDetailView, FormView):
+class AssignmentFormView(MiniregMixin, BaseDetailView, FormView):
     """A view for a user to fill out the assignment form"""
 
     template_name = "assignments/form.html"
@@ -266,10 +267,7 @@ class AssignmentFormView(BaseDetailView, FormView):
         elif form.cleaned_data.get("email"):
             try:
                 user = self.miniregister(
-                    form,
-                    form.cleaned_data["full_name"],
-                    form.cleaned_data["email"],
-                    form.cleaned_data.get("newsletter"),
+                    form, form.cleaned_data["full_name"], form.cleaned_data["email"]
                 )
             except requests.exceptions.RequestException:
                 return self.form_invalid(form)
@@ -335,10 +333,6 @@ class AssignmentFormView(BaseDetailView, FormView):
         return redirect(
             "assignments:assignment", slug=assignment.slug, pk=assignment.pk
         )
-
-    def miniregister(self, *args, **kwargs):
-        # XXX copy mini reg mixin over from muckrock
-        raise NotImplementedError
 
 
 class AssignmentEditResponseView(BaseDetailView, FormView):

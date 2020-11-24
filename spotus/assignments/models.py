@@ -537,7 +537,7 @@ class Response(models.Model):
         """Given the form data, create the values for this response"""
         # these values are passed in the form, but should not have
         # values created for them
-        for key in ["data_id", "full_name", "email", "newsletter", "public"]:
+        for key in ["data_id", "full_name", "email", "public"]:
             data.pop(key, None)
         for pk, value in data.items():
             value = value if value is not None else ""
