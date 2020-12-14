@@ -102,7 +102,7 @@ class AsyncFileDownloadTask:
         self.user = User.objects.get(pk=user_pk)
         today = date.today()
         md5sum = md5(
-            f"{int(time())}{settings.SECRET_KEY}{user_pk}{hash_key}"
+            f"{int(time())}{settings.SECRET_KEY}{user_pk}{hash_key}".encode("ascii")
         ).hexdigest()
         self.file_path = (
             f"{self.dir_name}/{today.year:4d}/{today.month:02d}/"
