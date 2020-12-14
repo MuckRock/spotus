@@ -126,7 +126,7 @@ class AsyncFileDownloadTask:
     def run(self):
         """Task entry point"""
         with smart_open(
-            "s3://{settings.BUCKET}/{self.file_path}",
+            f"s3://{settings.BUCKET}/{self.file_path}",
             "wb",
             transport_params={"multipart_upload_kwargs": {"ACL": "public-read"}},
         ) as out_file:
