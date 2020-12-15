@@ -127,7 +127,7 @@ class AsyncFileDownloadTask:
         """Task entry point"""
         with smart_open(
             f"s3://{settings.AWS_STORAGE_BUCKET_NAME}/{self.file_path}",
-            "wb",
+            "w",
             transport_params={"multipart_upload_kwargs": {"ACL": "public-read"}},
         ) as out_file:
             self.generate_file(out_file)
